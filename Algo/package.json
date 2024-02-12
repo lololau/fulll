@@ -1,5 +1,9 @@
 {
   "dependencies": {
     "ts-node": "^10.9.2"
+  },
+  "scripts": {
+    "fizzbuzz": "ts-node index.ts",
+    "test": "ts-node fizzbuzz.test.ts"
   }
 }
