@@ -11,7 +11,7 @@
     "typescript": "^4.5.4"
   },
   "scripts": {
-    "test": "cucumber-js tests/features/*.feature --require tests/steps/*.ts --require-module ts-node/register --profile default",
+    "test": "cucumber-js --profile default",
     "lint:fix": "prettier . --write"
   }
 }
