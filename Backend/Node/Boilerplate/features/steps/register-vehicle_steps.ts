@@ -7,6 +7,7 @@ import { IVehicle } from '../../src/Domain/Types/vehicle.type';
 import assert from 'assert';
 
 const user: IUser | undefined = undefined
+const secondUser: IUser | undefined = undefined
 const vehicle: IVehicle | undefined = undefined
 
 // Scenario 1
@@ -50,4 +51,17 @@ When('I try to register this vehicle into my fleet', async function () {
 
 Then('I should be informed this this vehicle has already been registered into my fleet', function () {
   assert.strictEqual('E_VEHICLE_ALREADY_EXISTS', this.result.message)
+});
+
+// Scenario 3
+Given('the fleet of another user', async function () {
+  // Write code here that turns the phrase above into concrete actions
+  if (!secondUser) {
+    this.secondUser = await createUser()
+  }
+  this.secondFleet = await createFleet(this.secondUser.userId)
+});
+
+Given('this vehicle has been registered into the other user\'s fleet', async function () {
+  await saveVehicleInFleet(this.secondFleet.fleetId, this.vehicle.vehiclePlateNumber)
 });
