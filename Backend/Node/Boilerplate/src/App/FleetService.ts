@@ -23,7 +23,6 @@ export async function createFleet(userId: string): Promise<IFleet> {
 
     return newFleet
   } catch (err) {
-    console.error(`Error during creating fleet: ${err}`)
     return err
   }
 }

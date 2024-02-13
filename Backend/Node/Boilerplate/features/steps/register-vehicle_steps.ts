@@ -4,6 +4,7 @@ import { createUser } from '../../src/App/UserService';
 import { createVehicle, isVehicleInMyFleet, saveVehicleInFleet } from '../../src/App/VehicleService';
 import { IUser } from '../../src/Domain/Types/user.type';
 import { IVehicle } from '../../src/Domain/Types/vehicle.type';
+import assert from 'assert';
 
 const user: IUser | undefined = undefined
 const vehicle: IVehicle | undefined = undefined
@@ -27,5 +28,26 @@ When('I register this vehicle into my fleet', async function () {
 });
 
 Then('this vehicle should be part of my vehicle fleet', async function () {
-  return await isVehicleInMyFleet(this.fleet.fleetId, this.vehicle.vehiclePlateNumber)
+  const result = await isVehicleInMyFleet(this.fleet.fleetId, this.vehicle.vehiclePlateNumber)
+  assert.strictEqual(true, result)
+});
+
+// Scenario 2
+Given('I have registered this vehicle into my fleet', async function () {
+  const result = await isVehicleInMyFleet(this.fleet.fleetId, this.vehicle.vehiclePlateNumber)
+  if (result) {
+    assert.strictEqual(true, result)
+  } else {
+    await saveVehicleInFleet(this.fleet.fleetId, this.vehicle.vehiclePlateNumber)
+    const isExisting = await isVehicleInMyFleet(this.fleet.fleetId, this.vehicle.vehiclePlateNumber)
+    assert.strictEqual(true, isExisting)
+  }
+});
+
+When('I try to register this vehicle into my fleet', async function () {
+  this.result = await saveVehicleInFleet(this.fleet.fleetId, this.vehicle.vehiclePlateNumber)
+});
+
+Then('I should be informed this this vehicle has already been registered into my fleet', function () {
+  assert.strictEqual('E_VEHICLE_ALREADY_EXISTS', this.result.message)
 });

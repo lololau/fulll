@@ -42,7 +42,6 @@ export async function saveVehicleInFleet(fleetId: string, vehiclePlateNumber: st
     }
     return vehicle
   } catch (err) {
-    console.error(err)
     return err
   }
 }
@@ -61,7 +60,6 @@ export async function isVehicleInMyFleet(fleetId: string, vehiclePlateNumber: st
     }
     return false
   } catch (err) {
-    console.error(err)
     return err
   }
 }
