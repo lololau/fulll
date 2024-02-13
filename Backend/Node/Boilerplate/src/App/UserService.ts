@@ -1,6 +1,6 @@
-import { IUser } from "../Domain/Types/user.type"
-import db from "../Infra/mock_db"
-import { generateId } from "./AppService"
+import { IUser } from '../Domain/Types/user.type'
+import db from '../Infra/mock_db'
+import { generateId } from './AppService'
 
 // Create new user
 export async function createUser(): Promise<IUser> {
@@ -21,4 +21,4 @@ export function getUser(userId: string): IUser {
   }
 
   return user
-} 
+}

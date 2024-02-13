@@ -1,4 +1,4 @@
-import { IVehicle } from "./vehicle.type"
+import { IVehicle } from './vehicle.type'
 
 export interface IFleet {
   fleetId: string

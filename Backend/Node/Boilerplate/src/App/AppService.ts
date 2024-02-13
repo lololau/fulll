@@ -1,5 +1,5 @@
 // Generate random id with length of 16, using base64 charac
-export function generateId (): string {
+export function generateId(): string {
   let id = ''
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
   let idLength = 0

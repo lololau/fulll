@@ -1,6 +1,6 @@
-import { IFleets } from "src/Domain/Types/fleet.type"
-import { IUsers } from "src/Domain/Types/user.type"
-import { IVehicles } from "src/Domain/Types/vehicle.type"
+import { IFleets } from 'src/Domain/Types/fleet.type'
+import { IUsers } from 'src/Domain/Types/user.type'
+import { IVehicles } from 'src/Domain/Types/vehicle.type'
 
 interface IDb {
   users: IUsers
@@ -11,7 +11,7 @@ interface IDb {
 const db: IDb = {
   users: {},
   fleets: {},
-  vehicles: {} 
+  vehicles: {}
 }
 
 export default db

@@ -1,6 +1,6 @@
-import db from "../Infra/mock_db"
-import { IVehicle } from "../Domain/Types/vehicle.type"
-import { getFleetById } from "./FleetService"
+import db from '../Infra/mock_db'
+import { IVehicle } from '../Domain/Types/vehicle.type'
+import { getFleetById } from './FleetService'
 
 // Create new vehicle
 export async function createVehicle(vehicle: IVehicle): Promise<IVehicle> {
@@ -16,7 +16,7 @@ export async function createVehicle(vehicle: IVehicle): Promise<IVehicle> {
 // Get vehicle by plate number
 export async function getVehicleByPlateNumber(vehiclePlateNumber: string): Promise<IVehicle> {
   const vehicle = db.vehicles[vehiclePlateNumber]
-  
+
   if (!vehicle) {
     throw new Error('E_VEHICLE_NOT_FOUND')
   }
@@ -34,7 +34,7 @@ export async function saveVehicleInFleet(fleetId: string, vehiclePlateNumber: st
     } else {
       const isVehicleAlreadyExist = fleet.vehicles.find((el) => el.vehiclePlateNumber === vehicle.vehiclePlateNumber)
       if (isVehicleAlreadyExist) {
-        throw new Error ('E_VEHICLE_ALREADY_EXISTS')
+        throw new Error('E_VEHICLE_ALREADY_EXISTS')
       }
 
       // saving into fleet table
