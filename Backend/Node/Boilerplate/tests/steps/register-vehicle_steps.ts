@@ -35,14 +35,9 @@ Then('this vehicle should be part of my vehicle fleet', async function () {
 
 // Scenario 2
 Given('I have registered this vehicle into my fleet', async function () {
+  await saveVehicleInFleet(this.fleet.fleetId, this.vehicle.vehiclePlateNumber)
   const result = await isVehicleInMyFleet(this.fleet.fleetId, this.vehicle.vehiclePlateNumber)
-  if (result) {
-    assert.strictEqual(true, result)
-  } else {
-    await saveVehicleInFleet(this.fleet.fleetId, this.vehicle.vehiclePlateNumber)
-    const isExisting = await isVehicleInMyFleet(this.fleet.fleetId, this.vehicle.vehiclePlateNumber)
-    assert.strictEqual(true, isExisting)
-  }
+  assert.strictEqual(true, result)
 });
 
 When('I try to register this vehicle into my fleet', async function () {
@@ -55,7 +50,6 @@ Then('I should be informed this this vehicle has already been registered into my
 
 // Scenario 3
 Given('the fleet of another user', async function () {
-  // Write code here that turns the phrase above into concrete actions
   if (!secondUser) {
     this.secondUser = await createUser()
   }
