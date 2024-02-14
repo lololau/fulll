@@ -4,9 +4,6 @@ import assert from 'assert'
 import { createFleet } from '../../src/App/FleetService'
 import { createUser } from '../../src/App/UserService'
 import { isVehicleInMyFleet, saveVehicleInFleet } from '../../src/App/VehicleService'
-import { IUser } from '../../src/Domain/Types/user.type'
-
-const secondUser: IUser | undefined = undefined
 
 When('I register this vehicle into my fleet', async function () {
   try {
@@ -35,9 +32,7 @@ Then('I should be informed this this vehicle has already been registered into my
 })
 
 Given('the fleet of another user', async function () {
-  if (!secondUser) {
-    this.secondUser = await createUser()
-  }
+  this.secondUser = await createUser()
   this.secondFleet = await createFleet(this.secondUser.userId)
 })
 
