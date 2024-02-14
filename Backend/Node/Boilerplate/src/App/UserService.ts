@@ -1,5 +1,6 @@
+import { createUserDb } from '../Infra/database'
 import { IUser } from '../Domain/Types/user.type'
-import db from '../Infra/mock_db'
+import dbFake from '../Infra/mock_db'
 import { generateId } from './AppService'
 
 // Create new user
@@ -8,13 +9,13 @@ export async function createUser(): Promise<IUser> {
   const newUser: IUser = {
     userId: id
   }
-  db.users[newUser.userId] = newUser
+  createUserDb(id)
   return newUser
 }
 
 // Get user by userId
 export function getUser(userId: string): IUser {
-  const user = db.users[userId]
+  const user = dbFake.users[userId]
 
   if (!user) {
     throw new Error('E_USER_NOT_FOUND')

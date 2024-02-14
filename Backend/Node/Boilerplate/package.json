@@ -13,5 +13,9 @@
   "scripts": {
     "test": "cucumber-js --profile default",
     "lint:fix": "prettier . --write"
+  },
+  "dependencies": {
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
   }
 }
