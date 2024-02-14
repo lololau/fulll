@@ -8,23 +8,19 @@ export async function createFleet(userId: string): Promise<IFleet> {
   const id = generateId()
 
   // try get user
-  try {
-    const user = getUser(userId)
+  const user = getUser(userId)
 
-    // creating new fleet
-    const newFleet = {
-      fleetId: id,
-      vehicles: []
-    }
-    db.fleets[newFleet.fleetId] = newFleet
-
-    // saving fleet in user data
-    user.fleet = newFleet
-
-    return newFleet
-  } catch (err) {
-    return err
+  // creating new fleet
+  const newFleet = {
+    fleetId: id,
+    vehicles: []
   }
+  db.fleets[newFleet.fleetId] = newFleet
+
+  // saving fleet in user data
+  user.fleet = newFleet
+
+  return newFleet
 }
 
 // Get fleet by id

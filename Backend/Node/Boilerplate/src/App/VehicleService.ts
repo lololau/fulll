@@ -25,41 +25,47 @@ export async function getVehicleByPlateNumber(vehiclePlateNumber: string): Promi
 
 // Save vehicle into the fleet
 export async function saveVehicleInFleet(fleetId: string, vehiclePlateNumber: string): Promise<IVehicle> {
-  try {
-    const fleet = await getFleetById(fleetId)
-    const vehicle = await getVehicleByPlateNumber(vehiclePlateNumber)
+  const fleet = await getFleetById(fleetId)
+  const vehicle = await getVehicleByPlateNumber(vehiclePlateNumber)
 
-    if (!fleet.vehicles) {
-      fleet.vehicles = [vehicle]
-    } else {
-      const isVehicleAlreadyExist = fleet.vehicles.find((el) => el.vehiclePlateNumber === vehicle.vehiclePlateNumber)
-      if (isVehicleAlreadyExist) {
-        throw new Error('E_VEHICLE_ALREADY_EXISTS')
-      }
-
-      // saving into fleet table
-      fleet.vehicles = [...fleet.vehicles, vehicle]
+  if (!fleet.vehicles) {
+    fleet.vehicles = [vehicle]
+  } else {
+    const isVehicleAlreadyExist = fleet.vehicles.find((el) => el.vehiclePlateNumber === vehicle.vehiclePlateNumber)
+    if (isVehicleAlreadyExist) {
+      throw new Error('E_VEHICLE_ALREADY_EXISTS')
     }
-    return vehicle
-  } catch (err) {
-    return err
+
+    // saving into fleet table
+    fleet.vehicles = [...fleet.vehicles, vehicle]
   }
+  return vehicle
 }
 
 // Get vehicle
 export async function isVehicleInMyFleet(fleetId: string, vehiclePlateNumber: string): Promise<boolean> {
-  try {
-    const fleet = await getFleetById(fleetId)
-    const vehicle = await getVehicleByPlateNumber(vehiclePlateNumber)
+  const fleet = await getFleetById(fleetId)
+  const vehicle = await getVehicleByPlateNumber(vehiclePlateNumber)
 
-    if (fleet.vehicles) {
-      const vehicleFound = fleet.vehicles.find((el) => el.vehiclePlateNumber === vehicle.vehiclePlateNumber)
-      if (vehicleFound) {
-        return true
-      }
-    }
-    return false
-  } catch (err) {
-    return err
+  if (fleet.vehicles) {
+    const vehicleFound = fleet.vehicles.find((el) => el.vehiclePlateNumber === vehicle.vehiclePlateNumber)
+    return !!vehicleFound
   }
+  return false
+}
+
+// Park vehicle at a location
+export async function parkVehicle(
+  vehiclePlateNumber: string,
+  location: { lat: number; lng: number }
+): Promise<IVehicle> {
+  const vehicle = await getVehicleByPlateNumber(vehiclePlateNumber)
+
+  if (vehicle.location === location) {
+    throw new Error('E_VEHICLE_ALREADY_HAVE_THIS_LOCATION')
+  }
+
+  vehicle.location = location
+
+  return vehicle
 }
