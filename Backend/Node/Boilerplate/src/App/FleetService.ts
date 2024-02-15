@@ -1,33 +1,24 @@
-import db from '../Infra/mock_db'
 import { IFleet } from '../Domain/Types/fleet.type'
 import { generateId } from './AppService'
 import { getUser } from './UserService'
+import { createFleetDb, getFleetDb } from '../Infra/database'
 
 // Create new fleet
 export async function createFleet(userId: string): Promise<IFleet> {
   const id = generateId()
 
   // try get user
-  const user = getUser(userId)
+  await getUser(userId)
 
-  // creating new fleet
-  const newFleet = {
-    fleetId: id,
-    vehicles: []
-  }
-  db.fleets[newFleet.fleetId] = newFleet
+  // create fleet for userId
+  await createFleetDb(userId, id)
 
-  // saving fleet in user data
-  user.fleet = newFleet
-
-  return newFleet
+  // get fleet
+  const fleet = await getFleetById(id)
+  return fleet
 }
 
-// Get fleet by id
+// Get fleet by i d
 export async function getFleetById(fleetId: string): Promise<IFleet> {
-  const fleet = db.fleets[fleetId]
-  if (!fleet) {
-    throw new Error('E_FLEET_NOT_FOUND')
-  }
-  return fleet
+  return getFleetDb(fleetId)
 }
