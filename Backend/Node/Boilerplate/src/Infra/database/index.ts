@@ -2,6 +2,7 @@
 import sqlite3 from 'sqlite3'
 import { IFleet } from 'src/Domain/Types/fleet.type'
 import { IUser } from 'src/Domain/Types/user.type'
+import { IVehicle } from 'src/Domain/Types/vehicle.type'
 sqlite3.verbose()
 
 let database: sqlite3.Database | undefined = undefined
@@ -13,38 +14,66 @@ function DB(): sqlite3.Database {
   return database
 }
 
-export function createDatabase(path: string) {
-  database = new sqlite3.Database(path, (err) => {
-    if (err) {
-      throw new Error('Error during connection to database')
-    } else {
-      createTables()
-    }
+export async function createDatabase(path: string): Promise<void> {
+  if (database) {
+    throw new Error('Database already created')
+  }
+
+  return new Promise<void>((resolve, reject) => {
+    database = new sqlite3.Database(path, (err) => {
+      if (err) {
+        reject(new Error(`Error during connection to database: ${err}`))
+      } else {
+        resolve(createTables())
+      }
+    })
   })
 }
 
-export function createTables() {
+export function closeDatabase() {
+  // Close db if existing
+  if (database) {
+    database.close()
+  }
+  database = undefined
+}
+
+export async function createTables(): Promise<void> {
   const db = DB()
-  db.run(`CREATE TABLE IF NOT EXISTS User (
-      userId VARCHAR(255) UNIQUE,
-      PRIMARY KEY(userId)
-    )`)
 
-  db.run(`CREATE TABLE IF NOT EXISTS Fleet (
-      fleetId VARCHAR(255) UNIQUE,
-      userId VARCHAR(255),
-      PRIMARY KEY(fleetId),
-      FOREIGN KEY(userId) REFERENCES User(userId)
-    )`)
-
-  db.run(`CREATE TABLE IF NOT EXISTS Vehicle (
-      vehiclePlateNumber VARCHAR(255) UNIQUE,
-      fleetId VARCHAR(255),
-      lat FLOAT,
-      lng FLOAT,
-      PRIMARY KEY(vehiclePlateNumber),
-      FOREIGN KEY(fleetId) REFERENCES Fleet(fleetId)
-    )`)
+  return new Promise<void>((resolve, reject) => {
+    db.run(
+      `CREATE TABLE IF NOT EXISTS User (
+        userId VARCHAR(255) UNIQUE,
+        PRIMARY KEY(userId)
+      )`
+    )
+      .run(
+        `CREATE TABLE IF NOT EXISTS Fleet (
+        fleetId VARCHAR(255) UNIQUE,
+        userId VARCHAR(255),
+        PRIMARY KEY(fleetId),
+        FOREIGN KEY(userId) REFERENCES User(userId)
+      )`
+      )
+      .run(
+        `CREATE TABLE IF NOT EXISTS Vehicle (
+        vehiclePlateNumber VARCHAR(255) UNIQUE,
+        fleetId VARCHAR(255) NOT NULL,
+        lat FLOAT,
+        lng FLOAT,
+        PRIMARY KEY(vehiclePlateNumber),
+        FOREIGN KEY(fleetId) REFERENCES Fleet(fleetId)
+      )`,
+        (err) => {
+          if (err) {
+            reject(err)
+          } else {
+            resolve()
+          }
+        }
+      )
+  })
 }
 
 // Create user in User table
@@ -79,31 +108,31 @@ export async function getUserDb(id: string): Promise<IUser> {
 }
 
 // Create fleet in Fleet table
-export async function createFleetDb(userId: string, fleetId: string): Promise<IFleet> {
+export async function createFleetDb(userId: string, fleetId: string): Promise<void> {
   const db = DB()
 
-  return new Promise<IFleet>((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     db.run(
       `INSERT INTO Fleet (fleetId, userId) VALUES ($fleetId, $userId)`,
       { $fleetId: fleetId, $userId: userId },
-      (err: string | undefined, row: IFleet) => {
+      (err) => {
         if (err) {
-          reject(new Error(err))
+          reject(err)
           return
         }
-        resolve(row)
+        resolve()
       }
     )
   })
 }
 
-// Create fleet by fleetId
+// Get fleet by fleetId
 export async function getFleetDb(id: string): Promise<IFleet> {
   const db = DB()
   return new Promise<IFleet>((resolve, reject) => {
     db.get(`SELECT * FROM Fleet WHERE fleetId='${id}'`, (err, row: IFleet) => {
       if (err) {
-        reject(new Error(`${err}`))
+        reject(err)
         return
       }
       if (row === undefined) {
@@ -111,6 +140,71 @@ export async function getFleetDb(id: string): Promise<IFleet> {
       }
       resolve(row)
     })
+  })
+}
+
+// Create vehicle in Vehicle table
+export async function createVehicleDb(fleetId: string, vehicle: IVehicle): Promise<void> {
+  const db = DB()
+
+  return new Promise<void>((resolve, reject) => {
+    db.run(
+      `INSERT INTO Vehicle (vehiclePlateNumber, fleetId, lat, lng) VALUES ($vehiclePlateNumber, $fleetId, $lat, $lng)`,
+      {
+        $vehiclePlateNumber: vehicle.vehiclePlateNumber,
+        $fleetId: fleetId,
+        $lat: vehicle.location?.lat,
+        $lng: vehicle.location?.lng
+      },
+      (err) => {
+        if (err) {
+          reject(err)
+          return
+        }
+        resolve()
+      }
+    )
+  })
+}
+
+// Get vehicle by vehiclePlateNumber
+export async function getVehicleDB(fleetId: string, vehiclePlateNumber: string): Promise<IVehicle> {
+  const db = DB()
+  return new Promise<IVehicle>((resolve, reject) => {
+    db.get(
+      `SELECT * FROM Vehicle WHERE vehiclePlateNumber='${vehiclePlateNumber}' AND fleetId='${fleetId}'`,
+      (err, row: IVehicle) => {
+        if (err) {
+          reject(new Error(`${err}`))
+          return
+        }
+        if (row === undefined) {
+          reject(new Error('E_VEHICLE_NOT_FOUND'))
+        }
+        resolve(row)
+      }
+    )
+  })
+}
+
+// Update vehicle location
+export async function updateVehicleDB(
+  fleetId: string,
+  vehiclePlateNumber: string,
+  location: { lat: string; lng: string }
+): Promise<void> {
+  const db = DB()
+  return new Promise<void>((resolve, reject) => {
+    db.run(
+      `UPDATE Vehicle SET lat='${location.lat}', lng='${location.lng}' WHERE vehiclePlateNumber='${vehiclePlateNumber}' AND fleetId='${fleetId}'`,
+      (err) => {
+        if (err) {
+          reject(err)
+          return
+        }
+        resolve()
+      }
+    )
   })
 }
 

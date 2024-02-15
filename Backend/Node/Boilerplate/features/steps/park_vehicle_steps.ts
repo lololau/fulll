@@ -8,7 +8,7 @@ Given('a location', function () {
 
 When('I park my vehicle at this location', async function () {
   try {
-    this.result = await parkVehicle(this.vehicle.vehiclePlateNumber, this.location)
+    this.result = await parkVehicle(this.fleet, this.vehicle.vehiclePlateNumber, this.location)
   } catch (err) {
     this.result = err
   }
@@ -16,19 +16,19 @@ When('I park my vehicle at this location', async function () {
 })
 
 Then('the known location of my vehicle should verify this location', async function () {
-  this.result = await getVehicleByPlateNumber(this.vehicle.vehiclePlateNumber)
+  this.result = await getVehicleByPlateNumber(this.fleet, this.vehicle.vehiclePlateNumber)
   assert.strictEqual(this.location, this.result.location)
 })
 
 Given('my vehicle has been parked into this location', async function () {
-  await parkVehicle(this.vehicle.vehiclePlateNumber, this.location)
-  this.result = await getVehicleByPlateNumber(this.vehicle.vehiclePlateNumber)
+  await parkVehicle(this.fleet, this.vehicle.vehiclePlateNumber, this.location)
+  this.result = await getVehicleByPlateNumber(this.fleet, this.vehicle.vehiclePlateNumber)
   assert.strictEqual(this.location, this.result.location)
 })
 
 When('I try to park my vehicle at this location', async function () {
   try {
-    this.result = await parkVehicle(this.vehicle.vehiclePlateNumber, this.location)
+    this.result = await parkVehicle(this.fleet, this.vehicle.vehiclePlateNumber, this.location)
   } catch (err) {
     this.result = err
   }

@@ -1,8 +1,8 @@
 export interface IVehicle {
   vehiclePlateNumber: string
   location?: {
-    lat: number
-    lng: number
+    lat: string
+    lng: string
   }
 }
 

@@ -18,7 +18,7 @@ export async function createFleet(userId: string): Promise<IFleet> {
   return fleet
 }
 
-// Get fleet by i d
+// Get fleet by id
 export async function getFleetById(fleetId: string): Promise<IFleet> {
   return getFleetDb(fleetId)
 }
