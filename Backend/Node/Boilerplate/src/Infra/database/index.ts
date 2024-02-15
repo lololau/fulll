@@ -2,7 +2,7 @@
 import sqlite3 from 'sqlite3'
 import { IFleet } from 'src/Domain/Types/fleet.type'
 import { IUser } from 'src/Domain/Types/user.type'
-import { IVehicle } from 'src/Domain/Types/vehicle.type'
+import { IVehicle, IVehicleDB } from 'src/Domain/Types/vehicle.type'
 sqlite3.verbose()
 
 let database: sqlite3.Database | undefined = undefined
@@ -58,11 +58,11 @@ export async function createTables(): Promise<void> {
       )
       .run(
         `CREATE TABLE IF NOT EXISTS Vehicle (
-        vehiclePlateNumber VARCHAR(255) UNIQUE,
-        fleetId VARCHAR(255) NOT NULL,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        vehiclePlateNumber VARCHAR(255),
+        fleetId VARCHAR(255) NOT NULL UNIQUE,
         lat FLOAT,
         lng FLOAT,
-        PRIMARY KEY(vehiclePlateNumber),
         FOREIGN KEY(fleetId) REFERENCES Fleet(fleetId)
       )`,
         (err) => {
@@ -156,8 +156,11 @@ export async function createVehicleDb(fleetId: string, vehicle: IVehicle): Promi
         $lat: vehicle.location?.lat,
         $lng: vehicle.location?.lng
       },
-      (err) => {
+      (err: any) => {
         if (err) {
+          if (err.errno === sqlite3.CONSTRAINT) {
+            reject(new Error('E_VEHICLE_ALREADY_EXISTS'))
+          }
           reject(err)
           return
         }
@@ -168,14 +171,16 @@ export async function createVehicleDb(fleetId: string, vehicle: IVehicle): Promi
 }
 
 // Get vehicle by vehiclePlateNumber
-export async function getVehicleDB(fleetId: string, vehiclePlateNumber: string): Promise<IVehicle> {
+export async function getVehicleDB(fleetId: string, vehiclePlateNumber: string): Promise<IVehicleDB> {
   const db = DB()
-  return new Promise<IVehicle>((resolve, reject) => {
+  // console.log('fleetId', fleetId)
+  // console.log('vehiclePlate', vehiclePlateNumber)
+  return new Promise<IVehicleDB>((resolve, reject) => {
     db.get(
       `SELECT * FROM Vehicle WHERE vehiclePlateNumber='${vehiclePlateNumber}' AND fleetId='${fleetId}'`,
-      (err, row: IVehicle) => {
+      (err, row: IVehicleDB) => {
         if (err) {
-          reject(new Error(`${err}`))
+          reject(err)
           return
         }
         if (row === undefined) {
