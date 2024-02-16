@@ -1,6 +1,6 @@
 import { createFleetDB, getFleetDB } from '../Infra/database/fleet.sqlite'
 import { IFleet } from '../Domain/Types/fleet.type'
-import { generateId } from './AppService'
+import { generateId } from './utils'
 import { getUser } from './UserService'
 
 // Create new fleet

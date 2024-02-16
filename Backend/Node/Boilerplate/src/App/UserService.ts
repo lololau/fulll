@@ -1,6 +1,6 @@
 import { createUserDB, getUserDB } from '../Infra/database/user.sqlite'
 import { IUser } from '../Domain/Types/user.type'
-import { generateId } from './AppService'
+import { generateId } from './utils'
 
 // Create new user
 export async function createUser() {
