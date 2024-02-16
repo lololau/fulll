@@ -22,6 +22,8 @@ $ git clone https://github.com/lololau/fulll
 
 2. Install packages:
 
+In `Backend/Node/Boilerplate`, run:
+
 ```
 $ yarn install
 ```
@@ -82,16 +84,20 @@ $ rm main.db
 
 ### Formatter
 
-To improve quality code, i use in this project **Prettier**.
-It is a simple but powerful tool to format your code.
+To improve quality code, i use in this project **EsLint** and **Prettier**.
+
+- **Prettier**: an opinionated code formatter
+- **EsLint**: linter tool to find and fix problems
 
 ### CI process
 
 In this project, i'm using a CI process to maintain quality and consistency.
 It is helpfull to prevent regressions.
 
-- test job: run the tests
-- lint job: check if there is any lint issue and failed or passed the job
+In my CI, i have two jobs:
+
+- test: run cucumber tests
+- lint: check if there is any lint issue
 
 # Project structure
 

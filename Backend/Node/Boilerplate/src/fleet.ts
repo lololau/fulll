@@ -3,17 +3,22 @@ import { createUser } from './App/UserService'
 import { createVehicle, parkVehicle } from './App/VehicleService'
 import { createDatabase } from './Infra/database'
 
+// Get command from cli and execute corresponding case
 async function getCommand(cmd: string | undefined, args: string[]) {
   const fleetId = args[0]
+
   const vehiclePlateNumber = args[1]
+  const latitude = args[2]
+  const longitude = args[3]
+
   switch (cmd) {
     // Command to create a new user
-    case 'create-user':
+    case 'create-user': {
       const user = await createUser()
       return `User created. \nuserId = ${user.userId}`
-
+    }
     // Command to create a fleet to a specific user
-    case 'create':
+    case 'create': {
       const userId = args[0]
       if (!userId) {
         return 'I need a userId'
@@ -21,9 +26,9 @@ async function getCommand(cmd: string | undefined, args: string[]) {
 
       const fleet = await createFleet(userId)
       return `Fleet created. \nfleetId = ${fleet.fleetId}`
-
+    }
     // Command to register a vehicle to a fleet
-    case 'register-vehicle':
+    case 'register-vehicle': {
       if (!fleetId) {
         return 'Missing fleetId and vehicle plate number'
       }
@@ -33,12 +38,9 @@ async function getCommand(cmd: string | undefined, args: string[]) {
 
       await createVehicle({ vehiclePlateNumber }, fleetId)
       return 'Vehicle created.'
-
+    }
     // Command to add location to a specific vehicle
-    case 'localize-vehicle':
-      const latitude = args[2]
-      const longitude = args[3]
-
+    case 'localize-vehicle': {
       if (!fleetId) {
         return 'Missing fleetId and vehicle plate number'
       }
@@ -51,7 +53,7 @@ async function getCommand(cmd: string | undefined, args: string[]) {
 
       const vehicle = await parkVehicle(fleetId, vehiclePlateNumber, { lat: latitude, lng: longitude })
       return { lat: vehicle.lat, lng: vehicle.lng }
-
+    }
     default:
       return 'unknown command'
   }

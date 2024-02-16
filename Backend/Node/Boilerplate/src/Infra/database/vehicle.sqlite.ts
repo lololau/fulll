@@ -14,7 +14,7 @@ export async function createVehicleDB(fleetId: string, vehicle: IVehicle): Promi
         $lat: vehicle.location?.lat,
         $lng: vehicle.location?.lng
       },
-      (err: any) => {
+      (err) => {
         if (err) {
           reject(err)
           return
