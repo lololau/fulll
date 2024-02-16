@@ -1,9 +1,9 @@
 module.exports = {
   default: {
-    requireModule: ["ts-node/register"],
-    require: ["./features/**/*.ts", "./features/*.ts"],
+    requireModule: ['ts-node/register'],
+    require: ['./features/**/*.ts', './features/*.ts'],
     worldParameters: {
-      repository: "default",
-    },
+      repository: 'default'
+    }
   }
-};
+}
