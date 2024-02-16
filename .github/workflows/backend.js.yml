@@ -5,14 +5,13 @@ on:
     branches: [master, backend]
 
 jobs:
+  # run cucumber test
   tests:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version:
-          [20.11.1]
-          # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        node-version: [20.11.1] #lts node version
 
     steps:
       - uses: actions/checkout@v2
@@ -25,4 +24,25 @@ jobs:
         working-directory: ./Backend/Node/Boilerplate/
       - name: run test
         run: yarn test
+        working-directory: ./Backend/Node/Boilerplate/
+
+  # run prettier
+  lint:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.11.1] #lts node version
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: install dependencies
+        run: yarn install
+        working-directory: ./Backend/Node/Boilerplate/
+      - name: run prettier
+        run: yarn lint
         working-directory: ./Backend/Node/Boilerplate/
