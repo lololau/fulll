@@ -3,7 +3,7 @@ import { createUser } from './App/UserService'
 import { createVehicle, parkVehicle } from './App/VehicleService'
 import { createDatabase } from './Infra/database'
 
-async function getCommand(cmd: string, args: string[]) {
+async function getCommand(cmd: string | undefined, args: string[]) {
   const fleetId = args[0]
   const vehiclePlateNumber = args[1]
   switch (cmd) {
@@ -64,9 +64,7 @@ const args = process.argv.slice(3)
 async function main() {
   // Set up creation/connection to database
   await createDatabase('main.db')
-  if (command) {
-    getCommand(command, args).then((stdout) => console.log(stdout))
-  }
+  getCommand(command, args).then((stdout) => console.log(stdout))
 }
 
 main()
