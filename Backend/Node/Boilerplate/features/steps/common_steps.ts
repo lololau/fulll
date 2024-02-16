@@ -17,7 +17,7 @@ Given('my fleet', async function () {
 })
 
 Given('a vehicle', async function () {
-  this.vehiclePlateNumber = 'ABC12359'
+  this.vehiclePlateNumber = 'ABC123DE'
 })
 
 Given('I have registered this vehicle into my fleet', async function () {

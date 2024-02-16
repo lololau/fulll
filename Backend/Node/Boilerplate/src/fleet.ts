@@ -50,13 +50,14 @@ async function getCommand(cmd: string, args: string[]) {
       }
 
       const vehicle = await parkVehicle(fleetId, vehiclePlateNumber, { lat: latitude, lng: longitude })
-      return vehicle.location
+      return { lat: vehicle.lat, lng: vehicle.lng }
 
     default:
       return 'unknown command'
   }
 }
 
+// Get command and args from cli
 const command = process.argv[2]
 const args = process.argv.slice(3)
 

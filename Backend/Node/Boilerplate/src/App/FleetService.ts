@@ -1,7 +1,7 @@
+import { createFleetDB, getFleetDB } from '../Infra/database/fleet.sqlite'
 import { IFleet } from '../Domain/Types/fleet.type'
 import { generateId } from './AppService'
 import { getUser } from './UserService'
-import { createFleetDb, getFleetDb } from '../Infra/database'
 
 // Create new fleet
 export async function createFleet(userId: string): Promise<IFleet> {
@@ -11,7 +11,7 @@ export async function createFleet(userId: string): Promise<IFleet> {
   await getUser(userId)
 
   // create fleet for userId
-  await createFleetDb(userId, id)
+  await createFleetDB(userId, id)
 
   // get fleet
   const fleet = await getFleetById(id)
@@ -20,5 +20,5 @@ export async function createFleet(userId: string): Promise<IFleet> {
 
 // Get fleet by id
 export async function getFleetById(fleetId: string): Promise<IFleet> {
-  return getFleetDb(fleetId)
+  return getFleetDB(fleetId)
 }

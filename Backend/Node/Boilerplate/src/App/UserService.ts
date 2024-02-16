@@ -1,16 +1,20 @@
-import { createUserDb, getUserDb } from '../Infra/database'
+import { createUserDB, getUserDB } from '../Infra/database/user.sqlite'
 import { IUser } from '../Domain/Types/user.type'
 import { generateId } from './AppService'
 
 // Create new user
 export async function createUser() {
   const id = generateId()
-  await createUserDb(id)
-  const user = await getUserDb(id)
+
+  // create new user
+  await createUserDB(id)
+
+  // get new user to return
+  const user = await getUserDB(id)
   return user
 }
 
 // Get user by userId
 export function getUser(userId: string): Promise<IUser> {
-  return getUserDb(userId)
+  return getUserDB(userId)
 }
