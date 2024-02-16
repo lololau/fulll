@@ -1,4 +1,4 @@
-# Vehicle fleet parking management
+# 🚗 Vehicle fleet parking management
 
 I have a vehicle fleet and I want to manage where every vehicle is parked.
 
@@ -12,7 +12,7 @@ I made this project as part of a technical interview.
 
 To run this project you will need a computer with Node and Yarn.
 
-## Installation
+## 🛠️ Installation
 
 1. Clone the repo:
 
