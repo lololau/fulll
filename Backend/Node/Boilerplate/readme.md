@@ -64,7 +64,7 @@ Go to `Backend/Node/Boilerplate` and run:
 $ yarn test
 ```
 
-## Database
+## 💾 Database
 
 ### Creation
 
@@ -80,7 +80,7 @@ You can for example run in the directory where the file exists:
 $ rm main.db
 ```
 
-## Quality code
+## 🧹 Quality code
 
 ### Formatter
 
