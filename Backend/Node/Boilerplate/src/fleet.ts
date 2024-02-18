@@ -36,6 +36,11 @@ async function getCommand(cmd: string | undefined, args: string[]) {
         return 'Missing vehicle plate number'
       }
 
+      const vehiclePlateRegex = new RegExp(/^[A-Z0-9]{6,10}$/g)
+      if (!vehiclePlateNumber.match(vehiclePlateRegex)) {
+        return 'VehiclePlateNumber must only contain alpha-numeric characters, between 6 and 10 length.'
+      }
+
       await createVehicle({ vehiclePlateNumber }, fleetId)
       return 'Vehicle created.'
     }
@@ -51,7 +56,19 @@ async function getCommand(cmd: string | undefined, args: string[]) {
         return 'Missing latitude and longitude'
       }
 
-      const vehicle = await parkVehicle(fleetId, vehiclePlateNumber, { lat: latitude, lng: longitude })
+      const latitudeParseFloat = parseFloat(latitude)
+      const longitudeParseFloat = parseFloat(longitude)
+      if (latitudeParseFloat < -90 || latitudeParseFloat > 90) {
+        return 'Latitude must be between -90 and 90 degres.'
+      }
+      if (longitudeParseFloat < -180 || longitudeParseFloat > 180) {
+        return 'Longitude must be between -180 and 180 degres.'
+      }
+
+      const vehicle = await parkVehicle(fleetId, vehiclePlateNumber, {
+        lat: latitudeParseFloat,
+        lng: longitudeParseFloat
+      })
       return { lat: vehicle.lat, lng: vehicle.lng }
     }
     default:

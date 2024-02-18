@@ -32,7 +32,7 @@ export async function getVehicle(fleetId: string, vehiclePlateNumber: string): P
 export async function parkVehicle(
   fleetId: string,
   vehiclePlateNumber: string,
-  location: { lat: string; lng: string }
+  location: { lat: number; lng: number }
 ): Promise<IVehicleDB> {
   // check if fleet is existing
   await getFleetDB(fleetId)

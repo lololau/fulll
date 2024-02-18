@@ -50,7 +50,7 @@ export async function getVehicleDB(fleetId: string, vehiclePlateNumber: string):
 export async function updateVehicleDB(
   fleetId: string,
   vehiclePlateNumber: string,
-  location: { lat: string; lng: string }
+  location: { lat: number; lng: number }
 ): Promise<void> {
   const db = DB()
   return new Promise<void>((resolve, reject) => {
